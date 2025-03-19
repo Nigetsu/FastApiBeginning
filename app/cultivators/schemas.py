@@ -3,7 +3,7 @@ import re
 from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
 
 
-class CCultivators(BaseModel):
+class CCultivator(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     phone_number: str = Field(..., description="Номер телефона в международном формате, начинающийся с '+'")
@@ -12,6 +12,8 @@ class CCultivators(BaseModel):
     date_of_birth: date = Field(..., description="Дата рождения пользователя в формате ГГГГ-ММ-ДД")
     email: EmailStr = Field(..., description="Электронная почта пользователя")
     address: str = Field(..., min_length=10, max_length=200, description="Адрес пользователя, не более 200 символов")
+    rank_id: int = Field(..., ge=1, description="id ранга культиватора")
+    position_id: int = Field(..., ge=1, description="id должности культиватора")
     rank: str | None = Field(..., description="Название ранга")
     position: str | None = Field(..., description="Название должности")
 

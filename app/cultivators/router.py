@@ -3,18 +3,18 @@ from fastapi.params import Depends
 
 from app.cultivators.dao import CultivatorDAO
 from app.cultivators.rb import RBCultivator
-from app.cultivators.schemas import CCultivators, CCultivatorAdd, CCultivatorUpd
+from app.cultivators.schemas import CCultivator, CCultivatorAdd, CCultivatorUpd
 
 router = APIRouter(prefix="/cultivators", tags=["Работа с культиваторами"])
 
 
 @router.get("/", summary="Получить всех культиваторов")
-async def get_all_cultivators(request_body: RBCultivator = Depends()) -> list[CCultivators]:
-    return await CultivatorDAO.find_all(**request_body.to_dict())
+async def get_all_cultivators():
+    return await CultivatorDAO.find_all()
 
 
 @router.get("/{id}", summary="Получить культиватора по id")
-async def get_cultivator_by_id(cultivator_id: int) -> CCultivators | dict:
+async def get_cultivator_by_id(cultivator_id: int) -> CCultivator | dict:
     res = await CultivatorDAO.find_full_data(cultivator_id)
     if res is None:
         return {"message": f"Культиватор с ID {cultivator_id} не найден!"}
@@ -22,7 +22,7 @@ async def get_cultivator_by_id(cultivator_id: int) -> CCultivators | dict:
 
 
 @router.get("/by_filter", summary="Получить культиватора по фильтру")
-async def get_cultivator_by_filter(request_body: RBCultivator = Depends()) -> CCultivators:
+async def get_cultivator_by_filter(request_body: RBCultivator = Depends()) -> CCultivator | dict:
     res = await CultivatorDAO.find_one_or_none_by_id(**request_body.to_dict())
     if res is None:
         return {"message": "Культиватор с указанными вами параметрами не найден!"}
